@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Bingo Boards</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .bingo-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            width: 43%;
+            margin-bottom: 20px;
+            border: 2px solid blue;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        .bingo-board div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 85px;
+            height: 80px;
+            border: 3px solid blue;
+            background-color: #fff;
+            border-radius: 15px;
+            font-weight: bolder;
+            font-size: 30px;
+        }
+        .bingo-board .header {
+            font-weight: bold;
+        }
+        .bingo-board .header-b {
+            background-color: red;
+            color: white;
+        }
+        .bingo-board .header-i {
+            background-color: #ffa500;
+            color: white;
+        }
+        .bingo-board .header-n {
+            background-color: #ffff00;
+            color: black;
+        }
+        .bingo-board .header-g {
+            background-color: #008000;
+            color: white;
+        }
+        .bingo-board .header-o {
+            background-color: #0000ff;
+            color: white;
+        }
+        .bingo-board .free {
+            background-color: aqua;
+            color: white;
+        }
+        .board-title {
+            grid-column: span 5;
+            text-align: center;
+            
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <h1 class="text-center my-4">All Boards</h1>
+        <div id="boards-container"></div>
+        <div class="text-center mt-4">
+            <a href="index.html" class="btn btn-secondary">Go back to Board Selection</a>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boardsContainer = document.getElementById('boards-container');
+
+            // Generate and use the same boards every time
+            const boards = generateUniqueBingoBoards();
+
+            // Display the boards
+            boards.forEach((board, index) => {
+                const boardElement = renderBingoBoard(board, index);
+                boardsContainer.appendChild(boardElement);
+            });
+        });
+
+        function seedRandom(seed) {
+            let m = 0x80000000;
+            let a = 1103515245;
+            let c = 12345;
+            let state = seed ? seed : Math.floor(Math.random() * (m - 1));
+
+            return function() {
+                state = (a * state + c) % m;
+                return state / (m - 1);
+            };
+        }
+
+        function shuffle(array, randomFunc) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(randomFunc() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateUniqueBingoBoards() {
+            const randomFunc = seedRandom(12345);
+            const boards = [];
+            const ranges = [
+                Array.from({ length: 15 }, (_, i) => i + 1),
+                Array.from({ length: 15 }, (_, i) => i + 16),
+                Array.from({ length: 15 }, (_, i) => i + 31),
+                Array.from({ length: 15 }, (_, i) => i + 46),
+                Array.from({ length: 15 }, (_, i) => i + 61)
+            ];
+
+            for (let i = 0; i < 100; i++) {
+                const board = [];
+                const boardRanges = ranges.map(range => [...range]);
+                boardRanges.forEach(range => shuffle(range, randomFunc));
+
+                for (let row = 0; row < 5; row++) {
+                    const currentRow = [];
+                    for (let col = 0; col < 5; col++) {
+                        if (row === 2 && col === 2) {
+                            currentRow.push('FREE');
+                        } else {
+                            currentRow.push(boardRanges[col][row]);
+                        }
+                    }
+                    board.push(currentRow);
+                }
+                boards.push(board);
+            }
+
+            return boards;
+        }
+
+        function renderBingoBoard(board, index) {
+            const boardContainer = document.createElement('div');
+            boardContainer.classList.add('bingo-board', 'shadow-sm', 'rounded', 'mb-4');
+
+            const title = document.createElement('div');
+            title.classList.add('board-title');
+            title.textContent = `Board ${index + 1}`;
+            boardContainer.appendChild(title);
+
+            const headers = ['B', 'I', 'N', 'G', 'O'];
+            const headerClasses = ['header-b', 'header-i', 'header-n', 'header-g', 'header-o'];
+
+            headers.forEach((header, index) => {
+                const headerCell = document.createElement('div');
+                headerCell.textContent = header;
+                headerCell.classList.add('header', headerClasses[index]);
+                boardContainer.appendChild(headerCell);
+            });
+
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    const cellElement = document.createElement('div');
+                    cellElement.textContent = board[row][col];
+                    if (board[row][col] === 'FREE') {
+                        cellElement.classList.add('free');
+                    }
+                    boardContainer.appendChild(cellElement);
+                }
+            }
+
+            return boardContainer;
+        }
+    </script>
+</body> 
+</html>

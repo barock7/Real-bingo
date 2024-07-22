@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Registration</title>
+    <link rel="stylesheet" href="registration.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Register Your Branch</h2>
+        <form id="registrationForm">
+            <label for="branchName">Branch Name:</label>
+            <input type="text" id="branchName" name="branchName" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Register</button>
+        </form>
+        <div id="loading" class="loading-indicator" style="display: none;">Loading...</div>
+    </div>
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js";
+      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+  
+      const firebaseConfig = {
+          apiKey: "AIzaSyBRW2r6gW8ah6DkbME0FzLfUv6kCzloO8U",
+          authDomain: "friendsbingo-d17f7.firebaseapp.com",
+          projectId: "friendsbingo-d17f7",
+          storageBucket: "friendsbingo-d17f7.appspot.com",
+          messagingSenderId: "1028940353502",
+          appId: "1:1028940353502:web:f7cc1615e2cf21bd60174f",
+          measurementId: "G-QTYPTTNWER"
+      };
+  
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+  
+      document.getElementById('registrationForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+  
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          const loadingIndicator = document.getElementById('loading');
+  
+          try {
+              loadingIndicator.style.display = 'block';
+  
+              const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+              const user = userCredential.user;
+  
+              // Store registration data in localStorage
+              const registrations = JSON.parse(localStorage.getItem('branch_registrations')) || [];
+              registrations.push({ email, password });
+              localStorage.setItem('branch_registrations', JSON.stringify(registrations));
+  
+              alert('Registration successful!');
+              window.location.href = 'signin.html';
+  
+          } catch (error) {
+              console.error('Error registering:', error);
+              alert('Error registering: ' + error.message);
+          } finally {
+              loadingIndicator.style.display = 'none';
+          }
+      });
+  </script>
+  
+</body>
+</html>

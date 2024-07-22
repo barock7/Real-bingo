@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Fixed Bingo Boards</title>
+</head>
+<body>
+    <script>
+        function generateBingoBoard() {
+            const board = [];
+            const ranges = [
+                Array.from({ length: 15 }, (_, i) => i + 1),
+                Array.from({ length: 15 }, (_, i) => i + 16),
+                Array.from({ length: 15 }, (_, i) => i + 31),
+                Array.from({ length: 15 }, (_, i) => i + 46),
+                Array.from({ length: 15 }, (_, i) => i + 61)
+            ];
+
+            ranges.forEach(range => shuffle(range));
+
+            for (let i = 0; i < 5; i++) {
+                const row = [];
+                for (let j = 0; j < 5; j++) {
+                    if (i === 2 && j === 2) {
+                        row.push('FREE');
+                    } else {
+                        row.push(ranges[j][i]);
+                    }
+                }
+                board.push(row);
+            }
+
+            return board;
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        const boards = [];
+        for (let i = 0; i < 100; i++) {
+            boards.push(generateBingoBoard());
+        }
+
+        const json = JSON.stringify(boards);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'fixed_bingo_boards.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    </script>
+</body>
+</html>

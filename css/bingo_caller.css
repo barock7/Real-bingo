@@ -1,0 +1,59 @@
+body { 
+    position: relative; 
+    min-height: 100vh; 
+    padding: 20px; 
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+}
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(26, 25, 25); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+}
+.left-down-corner { position: absolute; bottom: 570px; left: 20px; }
+.center-container { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
+.called-number { font-size: 2rem; margin-top: 20px; font-weight: bolder; }
+.numbers-container { display: flex; flex-direction: column; align-items: center; top: -100px; left: 50px; margin-bottom: 550px; color: #fff; position: relative; }
+.row { display: flex; align-items: center; margin-bottom: 10px; }
+.row h2 { width: 60px; height: 60px; margin-right: 50px;right: -50px; font-family: 'Times New Roman', Times; font-size: 3rem; border: 4px outset rgb(255, 123, 15); border-radius: 5px; background-color: rgb(41, 3, 253); color: #f8f9fa; margin-left: 200px; }
+.number { width: 50px; height: 50px; display: flex; font-family: 'Times New Roman', Times, serif; font-size: 40px; align-items: center; justify-content: center; border: 1px inset #f5a906; border-radius: 5px; font-weight: bolder; margin-right: 5px; background-color: rgb(8, 27, 63); }
+.called { background-color: rgb(255, 210, 10); color: rgb(14, 10, 66) }
+.highlight { background-color: rgb(255, 165, 0); }
+.bingo-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; width: 100%; margin-bottom: 20px; border: 2px solid blue; padding: 10px; background-color: #f8f9fa; }
+.bingo-board div { display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border: 3px solid blue; }
+.bingo-board .header { font-size: xx-large;font-weight: bolder; }
+.bingo-board .header-b { background-color: red; color: white; }
+.bingo-board .header-i { background-color: #df9816; color: white; }
+.bingo-board .header-n { background-color: #ffff00; color: black; }
+.bingo-board .header-g { background-color: #008000; color: white; }
+.bingo-board .header-o { background-color: #0000ff; color: white; }
+.bingo-board .free { background-color: aqua; color: white; }
+.board-title { grid-column: span 5; text-align: center; font-weight: bold; margin-bottom: 10px; }
+.called-numbers-container { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; position: absolute; margin-top: 330px; margin-left: 280px; }
+.called-number-item { margin: 5px; font-size: 3rem; width: 140px; height: 140px; color: rgb(7, 4, 4); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; background-color: white; border: 5px solid; }
+.called-number-item span { display: block; }
+.called-number-item.b { border-color: red; background-color: #ffcccc; }
+.called-number-item.i { border-color: orange; background-color: #ffddcc; }
+.called-number-item.n { border-color: yellow; background-color: #ffffcc; }
+.called-number-item.g { border-color: green; background-color: #ccffcc; }
+.called-number-item.o { border-color: blue; background-color: #ccccff; }
+.winner { border: 2px solid green; }
+.result { margin-top: 20px; font-size: xx-large; font-weight: bold;  }
+.total-bet-amount { position: absolute; top: 400px; right: 20px; font-size: 2.5rem; font-weight: bold; color: chartreuse; background-color: rgb(85, 87, 87); border: #ffff00; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; }
+.called-cell { background-color:yellow; font-size: large; font-weight: bold; }
+.marked { background-color: yellow; color: red; }
+.countdown { font-size: 3rem; font-weight: bold; color: rgb(245, 241, 41); margin-bottom: 10px; }
+.total-calls { font-size: 2rem; font-weight: bold; color: rgb(245, 241, 41); margin-top: 10px; margin-right: 1000px; }
+.ball { width: 180px; height: 180px; bottom: 10px; left: 80px; color: rgb(7, 4, 4); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 4rem; font-weight: bold; animation: pop-up 0.5s ease-out; position: absolute; top:450px; background-color: white; border: 10px solid; }
+.ball span { display: block; }
+.ball.b { border-color: red; }
+.ball.i { border-color: orange; }
+.ball.n { border-color: yellow; }
+.ball.g { border-color: green; }
+.ball.o { border-color: blue; }
+@keyframes pop-up { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.btn-info { background-color: rgb(173, 98, 98);}

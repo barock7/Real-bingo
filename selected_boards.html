@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selected Bingo Boards</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .bingo-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            width: 50%;
+            margin-bottom: 20px;
+            border: 2px solid blue;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .bingo-board div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            border: 3px solid blue;
+            font-size: xx-large;
+            font-weight: bolder;
+            cursor: pointer;
+        }
+        .bingo-board .header {
+            font-weight: bolder;
+            font-size: xx-large;
+        }
+        .bingo-board .header-b {
+            background-color: red;
+            color: white;
+        }
+        .bingo-board .header-i {
+            background-color: #ffa500;
+            color: white;
+        }
+        .bingo-board .header-n {
+            background-color: #ffff00;
+            color: black;
+        }
+        .bingo-board .header-g {
+            background-color: #008000;
+            color: white;
+        }
+        .bingo-board .header-o {
+            background-color: #0000ff;
+            color: white;
+        }
+        .bingo-board .free {
+            background-color: yellow;
+            color: black;
+        }
+        .board-title {
+            grid-column: span 5;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .marked {
+            background-color: yellow;
+            color: rgb(253, 37, 37);
+            font-size: bold;
+        }
+        .called {
+            background-color: yellow;
+            color: blue;
+        }
+        .bingo-board div:hover {
+            background-color: blue;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <h1 class="text-center my-4">Selected Boards</h1>
+        <div id="boards-container"></div>
+        <div class="text-center mt-4">
+            <a href="index.html" class="btn btn-secondary">Go back to Board Selection</a>
+        </div>
+    </div>
+
+    <script>
+        function renderBingoBoard(board, boardIndex, calledNumbers) {
+            const boardContainer = document.createElement('div');
+            boardContainer.classList.add('bingo-board', 'shadow-sm', 'rounded', 'mb-4');
+
+            const title = document.createElement('div');
+            title.classList.add('board-title');
+            title.textContent = `Board ${boardIndex + 1}`;
+            boardContainer.appendChild(title);
+
+            const headers = ['B', 'I', 'N', 'G', 'O'];
+            const headerClasses = ['header-b', 'header-i', 'header-n', 'header-g', 'header-o'];
+            headers.forEach((header, index) => {
+                const headerCell = document.createElement('div');
+                headerCell.textContent = header;
+                headerCell.classList.add('header', headerClasses[index]);
+                boardContainer.appendChild(headerCell);
+            });
+
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 5; j++) {
+                    const cellElement = document.createElement('div');
+                    cellElement.textContent = board[i][j];
+                    const cellValue = board[i][j];
+
+                    if (cellValue === 'FREE') {
+                        cellElement.classList.add('free');
+                    } else {
+                        const cellId = `${headers[j]}${cellValue}`;
+                        if (calledNumbers.has(cellId)) {
+                            cellElement.classList.add('called');
+                        }
+                        cellElement.addEventListener('click', () => {
+                            cellElement.classList.toggle('marked');
+                        });
+                    }
+                    boardContainer.appendChild(cellElement);
+                }
+            }
+
+            return boardContainer;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const boardsContainer = document.getElementById('boards-container');
+            const boards = JSON.parse(localStorage.getItem('bingo_boards'));
+            const selectedIndices = JSON.parse(localStorage.getItem('selected_boards'));
+            const calledNumbers = new Set(JSON.parse(localStorage.getItem('called_numbers')));
+
+            if (selectedIndices && selectedIndices.length > 0) {
+                selectedIndices.forEach(selectedIndex => {  
+                    const board = boards[selectedIndex];
+                    const boardElement = renderBingoBoard(board, selectedIndex, calledNumbers);
+                    boardsContainer.appendChild(boardElement);
+                });
+            } else {
+                boardsContainer.innerHTML = '<p class="text-center">No boards selected.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

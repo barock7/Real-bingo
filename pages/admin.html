@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .table {
+            margin-bottom: 20px;
+        }
+        .modal-body {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <h2>Branch Registrations</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="branch-registrations">
+                <!-- Branch registrations will be populated here -->
+            </tbody>
+        </table>
+        <button id="clear-registrations" class="btn btn-danger">Clear All Registrations</button>
+
+        <h2>Game History</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Total Bet Amount</th>
+                    <th>Total Calls</th>
+                    <th>Total Players</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody id="game-history">
+                <!-- Game history will be populated here -->
+            </tbody>
+        </table>
+        <button id="clear-history" class="btn btn-danger">Clear All Game History</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const branchRegistrations = document.getElementById('branch-registrations');
+            const gameHistory = document.getElementById('game-history');
+            const clearRegistrationsButton = document.getElementById('clear-registrations');
+            const clearHistoryButton = document.getElementById('clear-history');
+
+            function loadBranchRegistrations() {
+                const registrations = JSON.parse(localStorage.getItem('branch_registrations')) || [];
+                branchRegistrations.innerHTML = '';
+                registrations.forEach((reg, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${reg.email}</td>
+                        <td>${reg.password}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteRegistration(${index})">Delete</button>
+                        </td>
+                    `;
+                    branchRegistrations.appendChild(row);
+                });
+            }
+
+            function loadGameHistory() {
+                const history = JSON.parse(localStorage.getItem('bet_history')) || [];
+                gameHistory.innerHTML = '';
+                history.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.date}</td>
+                        <td>${record.amount}</td>
+                        <td>${record.totalCalls}</td>
+                        <td>${record.totalPlayers}</td>
+                        <td>${record.profit}</td>
+                    `;
+                    gameHistory.appendChild(row);
+                });
+            }
+
+            clearRegistrationsButton.addEventListener('click', () => {
+                localStorage.removeItem('branch_registrations');
+                loadBranchRegistrations();
+            });
+
+            clearHistoryButton.addEventListener('click', () => {
+                localStorage.removeItem('bet_history');
+                loadGameHistory();
+            });
+
+            loadBranchRegistrations();
+            loadGameHistory();
+        });
+
+        function deleteRegistration(index) {
+            const registrations = JSON.parse(localStorage.getItem('branch_registrations')) || [];
+            registrations.splice(index, 1);
+            localStorage.setItem('branch_registrations', JSON.stringify(registrations));
+            document.dispatchEvent(new Event('DOMContentLoaded'));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" lang="amh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game History</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #f8f9fa; 
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .history-table th, .history-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+        .history-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .history-table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Game History</h1>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Total Bet Amount</th>
+                    <th>Total Calls</th>
+                    <th>Total Players</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody id="history-table-body">
+                <!-- History records will be inserted here -->
+            </tbody>
+        </table>
+        <button id="clear-history" class="btn btn-danger">Clear History</button>
+        <button onclick="window.location.href='index.html'" class="btn btn-primary">Back to Game</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const historyTableBody = document.getElementById('history-table-body');
+            const clearHistoryButton = document.getElementById('clear-history');
+            
+            function loadHistory() {
+                const betHistory = JSON.parse(localStorage.getItem('bet_history')) || [];
+                historyTableBody.innerHTML = '';
+                betHistory.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.date}</td>
+                        <td>${record.amount}</td>
+                        <td>${record.totalCalls}</td>
+                        <td>${record.totalPlayers}</td>
+                        <td>${record.profit}</td>
+                    `;
+                    historyTableBody.appendChild(row);
+                });
+            }
+
+            clearHistoryButton.addEventListener('click', () => {
+                localStorage.removeItem('bet_history');
+                loadHistory();
+            });
+
+            loadHistory();
+        });
+    </script>
+</body>
+</html>
